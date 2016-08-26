@@ -41,8 +41,15 @@
 /* to have *_MAX definitions for all types when compiling with g++ */
 #define __STDC_LIMIT_MACROS
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(ZIP_DLL) && !defined(ZIP_STATIC)
+#ifdef BUILDING_LIBZIP
 #define ZIP_EXTERN __declspec(dllexport)
+#else
+#define ZIP_EXTERN __declspec(dllimport)
+#endif
+#endif
+
+#ifdef _WIN32
 /* for dup(), close(), etc. */
 #include <io.h>
 #endif

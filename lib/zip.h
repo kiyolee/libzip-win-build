@@ -36,9 +36,13 @@
 
 
 #ifndef ZIP_EXTERN
-# ifndef ZIP_STATIC
+# if defined(ZIP_DLL) && !defined(ZIP_STATIC)
 #  ifdef _WIN32
-#   define ZIP_EXTERN __declspec(dllimport)
+#   ifdef BUILDING_LIBZIP
+#    define ZIP_EXTERN __declspec(dllexport)
+#   else
+#    define ZIP_EXTERN __declspec(dllimport)
+#   endif
 #  elif defined(__GNUC__) && __GNUC__ >= 4
 #   define ZIP_EXTERN __attribute__ ((visibility ("default")))
 #  else
