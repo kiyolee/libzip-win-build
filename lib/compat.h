@@ -97,7 +97,9 @@ typedef char bool;
 #define open(a, b, c)	_open((a), (b))
 #endif
 #if defined(HAVE__SNPRINTF)
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf	_snprintf
+#endif
 #endif
 #if defined(HAVE__STRDUP)
 #if !defined(HAVE_STRDUP) || defined(_WIN32)
