@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzip-static", "libzip-static\libzip-static.vcxproj", "{C490F8C7-D8E8-43C9-8D09-9BC8AB705098}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzip", "libzip\libzip.vcxproj", "{80FE36C5-3585-4B16-974E-07985CAC3ABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,14 @@ Global
 		{C490F8C7-D8E8-43C9-8D09-9BC8AB705098}.Release|Win32.Build.0 = Release|Win32
 		{C490F8C7-D8E8-43C9-8D09-9BC8AB705098}.Release|x64.ActiveCfg = Release|x64
 		{C490F8C7-D8E8-43C9-8D09-9BC8AB705098}.Release|x64.Build.0 = Release|x64
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Debug|Win32.Build.0 = Debug|Win32
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Debug|x64.ActiveCfg = Debug|x64
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Debug|x64.Build.0 = Debug|x64
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Release|Win32.ActiveCfg = Release|Win32
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Release|Win32.Build.0 = Release|Win32
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Release|x64.ActiveCfg = Release|x64
+		{80FE36C5-3585-4B16-974E-07985CAC3ABC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
