@@ -30,7 +30,11 @@
 #define HAVE_STRDUP
 #define HAVE_STRICMP
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
+#if !defined(_MSC_VER) || _MSC_VER >= 1800
 #define HAVE_STDBOOL_H
+#else
+/* #undef HAVE_STDBOOL_H */
+#endif
 /* #undef HAVE_STRINGS_H */
 /* #undef HAVE_UNISTD_H */
 #define __INT8_LIBZIP 1
