@@ -247,6 +247,9 @@
     <ClInclude Include="..\..\win32\config.h" />
     <ClInclude Include="..\..\win32\zipconf.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\win32\libzip.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

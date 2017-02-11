@@ -1,0 +1,44 @@
+#include <winver.h>
+
+#define LIBZIP_VERSION_STR  "1.1.3"
+#define LIBZIP_VER_MAJOR    1
+#define LIBZIP_VER_MINOR    1
+#define LIBZIP_VER_REVISION 3
+
+#ifdef GCC_WINDRES
+VS_VERSION_INFO		VERSIONINFO
+#else
+VS_VERSION_INFO		VERSIONINFO	MOVEABLE IMPURE LOADONCALL DISCARDABLE
+#endif
+  FILEVERSION		LIBZIP_VER_MAJOR,LIBZIP_VER_MINOR,LIBZIP_VER_REVISION,0
+  PRODUCTVERSION	LIBZIP_VER_MAJOR,LIBZIP_VER_MINOR,LIBZIP_VER_REVISION,0
+  FILEFLAGSMASK		VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+  FILEFLAGS		1
+#else
+  FILEFLAGS		0
+#endif
+  FILEOS		VOS__WINDOWS32
+  FILETYPE		VFT_DLL
+  FILESUBTYPE		0	// not used
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    //language ID = U.S. English, char set = Windows, Multilingual
+    BEGIN
+      VALUE "FileDescription",	"libzip for Windows\0"
+      VALUE "FileVersion",	LIBZIP_VERSION_STR "\0"
+      VALUE "InternalName",	"libzip.dll\0"
+      VALUE "LegalCopyright",	"Copyright (C) 1999-2014 Dieter Baron and Thomas Klausner.\0"
+      VALUE "OriginalFilename",	"libzip.dll\0"
+      VALUE "ProductName",	"libzip\0"
+      VALUE "ProductVersion",	LIBZIP_VERSION_STR "\0"
+      VALUE "Comments",		"For more information visit <https://nih.at/libzip/>. Alternative build from <https://github.com/kiyolee/libzip-win-build/>.\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1252
+  END
+END
