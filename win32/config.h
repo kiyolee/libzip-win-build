@@ -3,25 +3,41 @@
 #ifndef _HAD_ZIPCONF_H
 #include "zipconf.h"
 #endif
-#if defined(_DEBUG) && defined(HAVE_SYS_TYPES_H_LIBZIP)
+#ifdef _DEBUG
 #include <sys/types.h> /* Sanity check for off_t */
 #endif
 /* BEGIN DEFINES */
 /* #undef HAVE___PROGNAME */
+#define HAVE__CHMOD
 #define HAVE__CLOSE
 #define HAVE__DUP
 #define HAVE__FDOPEN
 #define HAVE__FILENO
 #define HAVE__OPEN
 #define HAVE__SETMODE
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define HAVE__SNPRINTF
+#else
+/* #undef HAVE__SNPRINTF */
+#endif
 #define HAVE__STRDUP
 #define HAVE__STRICMP
+#define HAVE__STRTOI64
+#define HAVE__STRTOUI64
+#define HAVE__UMASK
+#define HAVE__UNLINK
+/* #undef HAVE_CLONEFILE */
+/* #undef HAVE_COMMONCRYPTO */
+/* #undef HAVE_CRYPTO */
+/* #undef HAVE_FICLONERANGE */
 #define HAVE_FILENO
 /* #undef HAVE_FSEEKO */
 /* #undef HAVE_FTELLO */
 /* #undef HAVE_GETPROGNAME */
+/* #undef HAVE_GNUTLS */
+/* #undef HAVE_LIBBZ2 */
 #define HAVE_OPEN
+/* #undef HAVE_OPENSSL */
 /* #undef HAVE_MKSTEMP */
 #define HAVE_SETMODE
 /* #undef HAVE_SNPRINTF */
@@ -29,6 +45,8 @@
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
 #define HAVE_STRICMP
+#define HAVE_STRTOLL
+#define HAVE_STRTOULL
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 #define HAVE_STDBOOL_H
@@ -49,6 +67,10 @@
 #define __INT64_LIBZIP 8
 #define INT64_T_LIBZIP 8
 #define UINT64_T_LIBZIP 8
+#define SHORT_LIBZIP 2
+#define INT_LIBZIP 4
+#define LONG_LIBZIP 4
+#define LONG_LONG_LIBZIP 8
 #ifdef _WIN64
 #define SIZEOF_OFF_T 4 /* Still 32-bit for Win64 */
 #define SIZE_T_LIBZIP 8
@@ -58,12 +80,15 @@
 #endif
 /* #undef SSIZE_T_LIBZIP */
 /* #undef HAVE_DIRENT_H */
+/* #undef HAVE_FTS_H */
 /* #undef HAVE_NDIR_H */
 /* #undef HAVE_SYS_DIR_H */
 /* #undef HAVE_SYS_NDIR_H */
+/* #undef WORDS_BIGENDIAN */
+#define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.1.3"
+#define VERSION "1.5.1"
 
 #ifndef HAVE_SSIZE_T_LIBZIP
 #  if SIZE_T_LIBZIP == INT_LIBZIP
