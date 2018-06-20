@@ -45,8 +45,13 @@
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
 #define HAVE_STRICMP
+#if !defined(_MSC_VER) || _MSC_VER >= 1800
 #define HAVE_STRTOLL
 #define HAVE_STRTOULL
+#else
+/* #undef HAVE_STRTOLL */
+/* #undef HAVE_STRTOULL */
+#endif
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 #define HAVE_STDBOOL_H
