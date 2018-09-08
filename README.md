@@ -17,7 +17,7 @@ zlib-win-build sits next to libzip-win-build.
 Basically, in a command prompt:
 
 > \> cd {somewhere}\\  
-> \> git clone http://github.com/kiyolee/zlib-win-build.git  
-> \> git clone http://github.com/kiyolee/libzip-win-build.git
+> \> git clone https://github.com/kiyolee/zlib-win-build.git  
+> \> git clone https://github.com/kiyolee/libzip-win-build.git
 
 Build zlib first and then libzip, with the same corresponding Visual Studio solution of course.
