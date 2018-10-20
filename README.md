@@ -11,7 +11,7 @@ To build, simply open the required solution file, and
 you know how to use Visual Studio, right?
 (or perhaps this is the wrong place for you.)
 
-Depends on zlib-win-build, currently a hard reference assuming
+Depends on zlib-win-build. There are hard references assuming
 zlib-win-build sits next to libzip-win-build.
 
 Basically, in a command prompt:
