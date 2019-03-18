@@ -2,7 +2,7 @@
 
 libzip Windows build with Visual Studio.
 
-This version is libzip-1.5.1.
+This version is libzip-1.5.2.
 
 See win-build-info for general information about the
 win-build effort.
