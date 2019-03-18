@@ -1,5 +1,5 @@
 /*
-  zip_crypto_commoncrypto.h -- definitions for CommonCrypto wrapper.
+  zip_crypto_mbedtls.h -- definitions for mbedtls wrapper
   Copyright (C) 2018 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
@@ -31,23 +31,24 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HAD_ZIP_CRYPTO_COMMONCRYPTO_H
-#define HAD_ZIP_CRYPTO_COMMONCRYPTO_H
+#ifndef HAD_ZIP_CRYPTO_MBEDTLS_H
+#define HAD_ZIP_CRYPTO_MBEDTLS_H
 
-#include <CommonCrypto/CommonCrypto.h>
+#include <mbedtls/aes.h>
+#include <mbedtls/md.h>
 
-#define _zip_crypto_aes_t struct _CCCryptor
-#define _zip_crypto_hmac_t CCHmacContext
+#define _zip_crypto_aes_t mbedtls_aes_context
+#define _zip_crypto_hmac_t mbedtls_md_context_t
 
-void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
-bool _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out);
 _zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
+#define _zip_crypto_aes_encrypt_block(aes, in, out) (mbedtls_aes_crypt_ecb((aes), MBEDTLS_AES_ENCRYPT, (in), (out)) == 0)
+void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
 
-#define _zip_crypto_hmac(hmac, data, length) (CCHmacUpdate((hmac), (data), (length)), true)
-void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
 _zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
-#define _zip_crypto_hmac_output(hmac, data) (CCHmacFinal((hmac), (data)), true)
+#define _zip_crypto_hmac(hmac, data, length) (mbedtls_md_hmac_update((hmac), (data), (length)) == 0)
+#define _zip_crypto_hmac_output(hmac, data) (mbedtls_md_hmac_finish((hmac), (data)) == 0)
+void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
 
-#define _zip_crypto_pbkdf2(key, key_length, salt, salt_length, iterations, output, output_length) (CCKeyDerivationPBKDF(kCCPBKDF2, (const char *)(key), (key_length), (salt), (salt_length), kCCPRFHmacAlgSHA1, (iterations), (output), (output_length)) == kCCSuccess)
+bool _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_uint8_t *salt, zip_uint16_t salt_length, int iterations, zip_uint8_t *output, zip_uint64_t output_length);
 
-#endif /* HAD_ZIP_CRYPTO_COMMONCRYPTO_H */
+#endif /*  HAD_ZIP_CRYPTO_MBEDTLS_H */

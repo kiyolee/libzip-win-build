@@ -1,6 +1,6 @@
 /*
   ziptool.c -- tool for modifying zip archive in multiple ways
-  Copyright (C) 2012-2017 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -563,8 +563,12 @@ zstat(int argc, char *argv[]) {
     if (sb.valid & ZIP_STAT_MTIME) {
 	struct tm *tpm;
 	tpm = localtime(&sb.mtime);
-	strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
-	printf("mtime: '%s'\n", buf);
+	if (tpm == NULL) {
+	    printf("mtime: <not valid>\n");
+	} else {
+	    strftime(buf, sizeof(buf), "%a %b %d %Y %H:%M:%S", tpm);
+	    printf("mtime: '%s'\n", buf);
+	}
     }
     if (sb.valid & ZIP_STAT_CRC)
 	printf("crc: '%0x'\n", sb.crc);

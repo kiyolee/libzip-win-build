@@ -28,7 +28,7 @@
 #define HAVE__UNLINK
 /* #undef HAVE_CLONEFILE */
 /* #undef HAVE_COMMONCRYPTO */
-/* #undef HAVE_CRYPTO */
+#define HAVE_CRYPTO
 /* #undef HAVE_FICLONERANGE */
 #define HAVE_FILENO
 /* #undef HAVE_FSEEKO */
@@ -36,9 +36,11 @@
 /* #undef HAVE_GETPROGNAME */
 /* #undef HAVE_GNUTLS */
 /* #undef HAVE_LIBBZ2 */
+/* #undef HAVE_MBEDTLS */
+/* #undef HAVE_MKSTEMP */
+/* #undef HAVE_NULLABLE */
 #define HAVE_OPEN
 /* #undef HAVE_OPENSSL */
-/* #undef HAVE_MKSTEMP */
 #define HAVE_SETMODE
 /* #undef HAVE_SNPRINTF */
 /* #undef HAVE_SSIZE_T_LIBZIP */
@@ -60,6 +62,7 @@
 #endif
 /* #undef HAVE_STRINGS_H */
 /* #undef HAVE_UNISTD_H */
+#define HAVE_WINDOWS_CRYPTO
 #define __INT8_LIBZIP 1
 #define INT8_T_LIBZIP 1
 #define UINT8_T_LIBZIP 1
@@ -93,7 +96,7 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.5.1"
+#define VERSION "1.5.2"
 
 #ifndef HAVE_SSIZE_T_LIBZIP
 #  if SIZE_T_LIBZIP == INT_LIBZIP
