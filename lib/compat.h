@@ -58,7 +58,7 @@
 
 #ifdef HAVE_STDBOOL_H
 #include <stdbool.h>
-#else
+#elif !defined(__BOOL_DEFINED)
 typedef char bool;
 #define true 1
 #define false 0
