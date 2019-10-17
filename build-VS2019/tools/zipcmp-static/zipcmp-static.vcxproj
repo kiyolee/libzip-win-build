@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{CB8CCAD8-869A-4491-B865-C824AF77C3C9}</ProjectGuid>
     <RootNamespace>zipcmp-static</RootNamespace>
   </PropertyGroup>

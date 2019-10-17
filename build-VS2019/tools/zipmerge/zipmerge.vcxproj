@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{DC09913E-78AC-41BA-B30E-1758D521CF34}</ProjectGuid>
     <RootNamespace>zipmerge</RootNamespace>
   </PropertyGroup>

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{91BD404C-9555-4F6E-8175-CE7E711795BA}</ProjectGuid>
     <RootNamespace>ziptool-static</RootNamespace>
   </PropertyGroup>
