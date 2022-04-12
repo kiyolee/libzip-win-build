@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -42,9 +42,6 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #ifdef HAVE_FTS_H
 #include <fts.h>
 #endif
@@ -54,8 +51,9 @@
 #include "getopt.h"
 #endif
 
-#include "compat.h"
 #include "zip.h"
+
+#include "compat.h"
 
 struct archive {
     const char *name;
@@ -106,7 +104,7 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003-2018 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2003-2019 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVipqtv"
@@ -233,16 +231,24 @@ compare_zip(char *const zn[]) {
     if (paranoid) {
 	if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
 	    if (verbose) {
-		printf("--- archive comment (%ld)\n", a[0].comment_length);
-		printf("+++ archive comment (%ld)\n", a[1].comment_length);
+		printf("--- archive comment (%zu)\n", a[0].comment_length);
+		printf("+++ archive comment (%zu)\n", a[1].comment_length);
 	    }
 	    res = 1;
 	}
     }
 
-    for (i = 0; i < 2; i++)
-	if (a[i].za)
+    for (i = 0; i < 2; i++) {
+	zip_uint64_t j;
+
+	if (a[i].za) {
 	    zip_close(a[i].za);
+	}
+	for (j = 0; j < a[i].nentry; j++) {
+	    free(a[i].entry[j].name);
+	}
+	free(a[i].entry);
+    }
 
     switch (res) {
     case 0:
@@ -265,7 +271,7 @@ compute_crc(const char *fname) {
     Bytef buffer[8192];
 
 
-    if ((f = fopen(fname, "r")) == NULL) {
+    if ((f = fopen(fname, "rb")) == NULL) {
 	fprintf(stderr, "%s: can't open %s: %s\n", progname, fname, strerror(errno));
 	return -1;
     }
@@ -636,9 +642,9 @@ entry_paranoia_checks(char *const name[2], const void *p1, const void *p2) {
 		header_done = 1;
 	    }
 	    printf("---                     %s  ", e1->name);
-	    printf("comment %d\n", e1->comment_length);
+	    printf("comment %" PRIu32 "\n", e1->comment_length);
 	    printf("+++                     %s  ", e1->name);
-	    printf("comment %d\n", e2->comment_length);
+	    printf("comment %" PRIu32 "\n", e2->comment_length);
 	}
 	ret = 1;
     }

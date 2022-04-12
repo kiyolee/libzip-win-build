@@ -1,6 +1,6 @@
 /*
   zip_crypto_win.h -- Windows Crypto API wrapper.
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,6 +33,8 @@
 
 #ifndef HAD_ZIP_CRYPTO_WIN_H
 #define HAD_ZIP_CRYPTO_WIN_H
+
+#define HAVE_SECURE_RANDOM
 
 typedef struct _zip_crypto_aes_s _zip_crypto_aes_t;
 typedef struct _zip_crypto_hmac_s _zip_crypto_hmac_t;

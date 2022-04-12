@@ -1,6 +1,6 @@
 /*
   zip_ftell.c -- tell position in file
-  Copyright (C) 2016-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2016-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,7 +33,6 @@
 
 
 #include "zipint.h"
-#include <stdio.h>
 
 ZIP_EXTERN zip_int64_t
 zip_ftell(zip_file_t *zf) {

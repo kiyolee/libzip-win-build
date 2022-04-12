@@ -1,6 +1,6 @@
 /*
   zip_source_compress.c -- (de)compression routines
-  Copyright (C) 2017-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2017-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,7 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -67,6 +66,16 @@ static struct implementation implementations[] = {
 #if defined(HAVE_LIBBZ2)
     {ZIP_CM_BZIP2, &zip_algorithm_bzip2_compress, &zip_algorithm_bzip2_decompress},
 #endif
+#if defined(HAVE_LIBLZMA)
+    /*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
+	archives made this way - and vice versa.
+
+	{ZIP_CM_LZMA, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+	{ZIP_CM_LZMA2, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+    */
+    {ZIP_CM_XZ, &zip_algorithm_xz_compress, &zip_algorithm_xz_decompress},
+#endif
+
 };
 
 static size_t implementations_size = sizeof(implementations) / sizeof(implementations[0]);
@@ -96,10 +105,10 @@ get_algorithm(zip_int32_t method, bool compress) {
     return NULL;
 }
 
-bool
-zip_compression_method_supported(zip_int32_t method, bool compress) {
+ZIP_EXTERN int
+zip_compression_method_supported(zip_int32_t method, int compress) {
     if (method == ZIP_CM_STORE) {
-	return true;
+	return 1;
     }
     return get_algorithm(method, compress) != NULL;
 }
@@ -347,9 +356,6 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
     }
 	return 0;
 
-    case ZIP_SOURCE_GET_COMPRESSION_FLAGS:
-	return ctx->is_stored ? 0 : ctx->algorithm->compression_flags(ctx->ud);
-
     case ZIP_SOURCE_ERROR:
 	return zip_error_to_data(&ctx->error, data, len);
 
@@ -357,8 +363,24 @@ compress_callback(zip_source_t *src, void *ud, void *data, zip_uint64_t len, zip
 	context_free(ctx);
 	return 0;
 
+    case ZIP_SOURCE_GET_FILE_ATTRIBUTES: {
+	zip_file_attributes_t *attributes = (zip_file_attributes_t *)data;
+
+	if (len < sizeof(*attributes)) {
+	    zip_error_set(&ctx->error, ZIP_ER_INVAL, 0);
+	    return -1;
+	}
+
+	attributes->valid |= ZIP_FILE_ATTRIBUTES_VERSION_NEEDED | ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS;
+	attributes->version_needed = ctx->algorithm->version_needed;
+	attributes->general_purpose_bit_mask = ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS_ALLOWED_MASK;
+	attributes->general_purpose_bit_flags = (ctx->is_stored ? 0 : ctx->algorithm->general_purpose_bit_flags(ctx->ud));
+
+	return sizeof(*attributes);
+    }
+
     case ZIP_SOURCE_SUPPORTS:
-	return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_COMPRESSION_FLAGS, -1);
+	return ZIP_SOURCE_SUPPORTS_READABLE | zip_source_make_command_bitmap(ZIP_SOURCE_GET_FILE_ATTRIBUTES, -1);
 
     default:
 	zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);

@@ -1,6 +1,6 @@
 /*
-  zip_source_file.c -- create data source from file
-  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
+  zip_mkstempm.c -- mkstemp replacement that accepts a mode argument
+  Copyright (C) 2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,31 +31,63 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #include "zipint.h"
 
-#ifdef _WIN32
-#error This file is incompatible with Windows, use zip_source_win32utf8.c instead.
-#error Something probably went wrong with configure/cmake.
-#endif
+/*
+ * create temporary file with same permissions as previous one;
+ * or default permissions if there is no previous file
+ */
+int
+_zip_mkstempm(char *path, int mode) {
+    int fd;
+    char *start, *end, *xs;
 
-ZIP_EXTERN zip_source_t *
-zip_source_file(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
-    if (za == NULL)
-	return NULL;
+    int xcnt = 0;
 
-    return zip_source_file_create(fname, start, len, &za->error);
-}
-
-
-ZIP_EXTERN zip_source_t *
-zip_source_file_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
-    if (fname == NULL || length < -1) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+    end = path + strlen(path);
+    start = end - 1;
+    while (start >= path && *start == 'X') {
+	xcnt++;
+	start--;
     }
 
-    return _zip_source_file_or_p(fname, NULL, start, length, NULL, error);
+    if (xcnt == 0) {
+	errno = EINVAL;
+	return -1;
+    }
+
+    start++;
+
+    for (;;) {
+	zip_uint32_t value = zip_random_uint32();
+
+	xs = start;
+
+	while (xs < end) {
+	    char digit = value % 36;
+	    if (digit < 10) {
+		*(xs++) = digit + '0';
+	    }
+	    else {
+		*(xs++) = digit - 10 + 'a';
+	    }
+	    value /= 36;
+	}
+
+	if ((fd = open(path, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, mode == -1 ? 0666 : (mode_t)mode)) >= 0) {
+	    if (mode != -1) {
+		/* open() honors umask(), which we don't want in this case */
+		(void)chmod(path, (mode_t)mode);
+	    }
+	    return fd;
+	}
+	if (errno != EEXIST) {
+	    return -1;
+	}
+    }
 }

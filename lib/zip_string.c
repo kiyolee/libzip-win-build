@@ -1,6 +1,6 @@
 /*
   zip_string.c -- string handling (with encoding)
-  Copyright (C) 2012-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -34,9 +34,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "zipint.h"
-
 
 zip_uint32_t
 _zip_string_crc32(const zip_string_t *s) {
@@ -145,7 +145,7 @@ _zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, 
 	return NULL;
     }
 
-    if ((s->raw = (zip_uint8_t *)malloc((size_t)(length + 1))) == NULL) {
+    if ((s->raw = (zip_uint8_t *)malloc((size_t)length + 1)) == NULL) {
 	free(s);
 	return NULL;
     }

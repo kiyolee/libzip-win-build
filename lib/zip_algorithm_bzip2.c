@@ -1,6 +1,6 @@
 /*
   zip_algorithm_bzip2.c -- bzip2 (de)compression routines
-  Copyright (C) 2017-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2017-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -90,8 +90,8 @@ deallocate(void *ud) {
 }
 
 
-static int
-compression_flags(void *ud) {
+static zip_uint16_t
+general_purpose_bit_flags(void *ud) {
     return 0;
 }
 
@@ -242,12 +242,13 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 }
 
-// clang-format off
+/* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
     compress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
+    46,
     start,
     end,
     input,
@@ -259,7 +260,8 @@ zip_compression_algorithm_t zip_algorithm_bzip2_compress = {
 zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
     decompress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
+    46,
     start,
     end,
     input,
@@ -267,4 +269,4 @@ zip_compression_algorithm_t zip_algorithm_bzip2_decompress = {
     process
 };
 
-// clang-format on
+/* clang-format on */

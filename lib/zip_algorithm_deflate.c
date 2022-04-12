@@ -1,6 +1,6 @@
 /*
   zip_algorithm_deflate.c -- deflate (de)compression routines
-  Copyright (C) 2017-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2017-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -51,6 +51,7 @@ allocate(bool compress, int compression_flags, zip_error_t *error) {
     struct ctx *ctx;
 
     if ((ctx = (struct ctx *)malloc(sizeof(*ctx))) == NULL) {
+	zip_error_set(error, ZIP_ET_SYS, errno);
 	return NULL;
     }
 
@@ -90,8 +91,8 @@ deallocate(void *ud) {
 }
 
 
-static int
-compression_flags(void *ud) {
+static zip_uint16_t
+general_purpose_bit_flags(void *ud) {
     struct ctx *ctx = (struct ctx *)ud;
 
     if (!ctx->compress) {
@@ -99,10 +100,10 @@ compression_flags(void *ud) {
     }
 
     if (ctx->compression_flags < 3) {
-	return 2;
+	return 2 << 1;
     }
     else if (ctx->compression_flags > 7) {
-	return 1;
+	return 1 << 1;
     }
     return 0;
 }
@@ -219,12 +220,13 @@ process(void *ud, zip_uint8_t *data, zip_uint64_t *length) {
     }
 }
 
-// clang-format off
+/* clang-format off */
 
 zip_compression_algorithm_t zip_algorithm_deflate_compress = {
     compress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
+    20,
     start,
     end,
     input,
@@ -236,7 +238,8 @@ zip_compression_algorithm_t zip_algorithm_deflate_compress = {
 zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
     decompress_allocate,
     deallocate,
-    compression_flags,
+    general_purpose_bit_flags,
+    20,
     start,
     end,
     input,
@@ -244,4 +247,4 @@ zip_compression_algorithm_t zip_algorithm_deflate_decompress = {
     process
 };
 
-// clang-format on
+/* clang-format on */

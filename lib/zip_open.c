@@ -1,6 +1,6 @@
 /*
   zip_open.c -- open zip archive by name
-  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -32,20 +32,13 @@
 */
 
 
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 
 #include "zipint.h"
 
-typedef enum {
-    EXISTS_ERROR = -1,
-    EXISTS_NOT = 0,
-    EXISTS_EMPTY,
-    EXISTS_NONEMPTY,
-} exists_t;
+typedef enum { EXISTS_ERROR = -1, EXISTS_NOT = 0, EXISTS_OK } exists_t;
 static zip_t *_zip_allocate_new(zip_source_t *src, unsigned int flags, zip_error_t *error);
 static zip_int64_t _zip_checkcons(zip_t *za, zip_cdir_t *cdir, zip_error_t *error);
 static zip_cdir_t *_zip_find_central_dir(zip_t *za, zip_uint64_t len);
@@ -174,17 +167,14 @@ _zip_open(zip_source_t *src, unsigned int flags, zip_error_t *error) {
     }
     len = st.size;
 
-    /* treat empty files as empty archives */
-    if (len == 0) {
-	if ((za = _zip_allocate_new(src, flags, error)) == NULL) {
-	    return NULL;
-	}
-
-	return za;
-    }
 
     if ((za = _zip_allocate_new(src, flags, error)) == NULL) {
 	return NULL;
+    }
+
+    /* treat empty files as empty archives */
+    if (len == 0 && zip_source_accept_empty(src)) {
+	return za;
     }
 
     if ((cdir = _zip_find_central_dir(za, len)) == NULL) {
@@ -540,7 +530,7 @@ _zip_file_exists(zip_source_t *src, zip_error_t *error) {
 	return EXISTS_ERROR;
     }
 
-    return (st.valid & ZIP_STAT_SIZE) && st.size == 0 ? EXISTS_EMPTY : EXISTS_NONEMPTY;
+    return EXISTS_OK;
 }
 
 
@@ -725,16 +715,19 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     eocd_disk = _zip_buffer_get_16(buffer);
     eocd_offset = _zip_buffer_get_64(buffer);
 
-    if (eocd_offset > ZIP_INT64_MAX || eocd_offset + EOCD64LEN < eocd_offset) {
+    /* valid seek value for start of EOCD */
+    if (eocd_offset > ZIP_INT64_MAX) {
 	zip_error_set(error, ZIP_ER_SEEK, EFBIG);
 	return NULL;
     }
 
+    /* does EOCD fit before EOCD locator? */
     if (eocd_offset + EOCD64LEN > eocdloc_offset + buf_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }
 
+    /* make sure current position of buffer is beginning of EOCD */
     if (eocd_offset >= buf_offset && eocd_offset + EOCD64LEN <= buf_offset + _zip_buffer_size(buffer)) {
 	_zip_buffer_set_offset(buffer, eocd_offset - buf_offset);
 	free_buffer = false;
@@ -758,8 +751,10 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 	return NULL;
     }
 
+    /* size of EOCD */
     size = _zip_buffer_get_64(buffer);
 
+    /* is there a hole between EOCD and EOCD locator, or do they overlap? */
     if ((flags & ZIP_CHECKCONS) && size + eocd_offset + 12 != buf_offset + eocdloc_offset) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	if (free_buffer) {
@@ -811,6 +806,7 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
     size = _zip_buffer_get_64(buffer);
     offset = _zip_buffer_get_64(buffer);
 
+    /* did we read past the end of the buffer? */
     if (!_zip_buffer_ok(buffer)) {
 	zip_error_set(error, ZIP_ER_INTERNAL, 0);
 	if (free_buffer) {
@@ -833,6 +829,11 @@ _zip_read_eocd64(zip_source_t *src, zip_buffer_t *buffer, zip_uint64_t buf_offse
 	return NULL;
     }
     if ((flags & ZIP_CHECKCONS) && offset + size != buf_offset + eocd_offset) {
+	zip_error_set(error, ZIP_ER_INCONS, 0);
+	return NULL;
+    }
+
+    if (nentry > size / CDENTRYSIZE) {
 	zip_error_set(error, ZIP_ER_INCONS, 0);
 	return NULL;
     }

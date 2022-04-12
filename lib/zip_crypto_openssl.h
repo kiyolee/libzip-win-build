@@ -1,6 +1,6 @@
 /*
   zip_crypto_openssl.h -- definitions for OpenSSL wrapper.
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,6 +33,8 @@
 
 #ifndef HAD_ZIP_CRYPTO_OPENSSL_H
 #define HAD_ZIP_CRYPTO_OPENSSL_H
+
+#define HAVE_SECURE_RANDOM
 
 #include <openssl/aes.h>
 #include <openssl/hmac.h>

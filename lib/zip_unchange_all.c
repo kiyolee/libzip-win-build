@@ -1,6 +1,6 @@
 /*
   zip_unchange.c -- undo changes to all files in zip archive
-  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -31,8 +31,6 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <stdlib.h>
 
 #include "zipint.h"
 

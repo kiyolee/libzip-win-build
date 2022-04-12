@@ -1,8 +1,8 @@
-This is libzip, a C library for reading, creating, and modifying zip
-archives. Files can be added from data buffers, files, or compressed
-data copied directly from other zip archives. Changes made without
-closing the archive can be reverted. Decryption and encryption of
-Winzip AES and decryption of legacy PKware encrypted files is
+This is libzip, a C library for reading, creating, and modifying
+zip and zip64 archives. Files can be added from data buffers, files,
+or compressed data copied directly from other zip archives. Changes
+made without closing the archive can be reverted. Decryption and
+encryption of Winzip AES and legacy PKware encrypted files is
 supported. The API is documented by man pages.
 
 libzip is fully documented via man pages. HTML versions of the man
@@ -35,5 +35,5 @@ to libzip-discuss at nih.at. Use this for bug reports or questions.
 If you want to reach the authors in private, use <libzip@nih.at>.
 
 [![Travis Build Status](https://api.travis-ci.org/nih-at/libzip.svg?branch=master)](https://travis-ci.org/nih-at/libzip)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/5x1raqqjro4wny7r?svg=true)](https://ci.appveyor.com/project/0-wiz-0/libzip)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/f1bqqt9djvf22f5g?svg=true)](https://ci.appveyor.com/project/nih-at/libzip)
 [![Coverity Status](https://scan.coverity.com/projects/127/badge.svg)](https://scan.coverity.com/projects/libzip)

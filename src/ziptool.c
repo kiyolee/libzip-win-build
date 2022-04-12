@@ -1,6 +1,6 @@
 /*
   ziptool.c -- tool for modifying zip archive in multiple ways
-  Copyright (C) 2012-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2012-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -36,7 +36,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
+#include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -53,8 +53,9 @@
 #endif
 extern int optopt;
 
-#include "compat.h"
 #include "zip.h"
+
+#include "compat.h"
 
 typedef struct dispatch_table_s {
     const char *cmdline_name;
@@ -386,9 +387,17 @@ name_locate(int argc, char *argv[]) {
     return 0;
 }
 
+struct progress_userdata_s {
+  double percentage;
+  double limit;
+};
+
+struct progress_userdata_s progress_userdata;
+
 static void
 progress_callback(zip_t *archive, double percentage, void *ud) {
-    printf("%.1lf%% done\n", percentage * 100);
+    printf("%.1f%% done\n", percentage * 100);
+    progress_userdata.percentage = percentage;
 }
 
 static int
@@ -471,7 +480,7 @@ set_file_compression(int argc, char *argv[]) {
     method = get_compression_method(argv[1]);
     flags = (zip_uint32_t)strtoull(argv[2], NULL, 10);
     if (zip_set_file_compression(za, idx, method, flags) < 0) {
-	fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to '%s', flags '%d': %s\n", idx, argv[1], flags, zip_strerror(za));
+	fprintf(stderr, "can't set file compression method at index '%" PRIu64 "' to '%s', flags '%" PRIu32 "': %s\n", idx, argv[1], flags, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -490,6 +499,21 @@ set_file_encryption(int argc, char *argv[]) {
     }
     if (zip_file_set_encryption(za, idx, method, password) < 0) {
 	fprintf(stderr, "can't set file encryption method at index '%" PRIu64 "' to '%s': %s\n", idx, argv[1], zip_strerror(za));
+	return -1;
+    }
+    return 0;
+}
+
+static int
+set_file_dostime(int argc, char *argv[]) {
+    /* set file last modification time (mtime) directly */
+    zip_uint16_t dostime, dosdate;
+    zip_uint64_t idx;
+    idx = strtoull(argv[0], NULL, 10);
+    dostime = (zip_uint16_t)strtoull(argv[1], NULL, 10);
+    dosdate = (zip_uint16_t)strtoull(argv[2], NULL, 10);
+    if (zip_file_set_dostime(za, idx, dostime, dosdate, 0) < 0) {
+	fprintf(stderr, "can't set file dostime at index '%" PRIu64 "' to '%d'/'%d': %s\n", idx, (int)dostime, (int)dosdate, zip_strerror(za));
 	return -1;
     }
     return 0;
@@ -562,7 +586,12 @@ zstat(int argc, char *argv[]) {
 	printf("compressed size: '%" PRIu64 "'\n", sb.comp_size);
     if (sb.valid & ZIP_STAT_MTIME) {
 	struct tm *tpm;
+#ifdef HAVE_LOCALTIME_R
+	struct tm tm;
+	tpm = localtime_r(&sb.mtime, &tm);
+#else
 	tpm = localtime(&sb.mtime);
+#endif
 	if (tpm == NULL) {
 	    printf("mtime: <not valid>\n");
 	} else {
@@ -601,32 +630,47 @@ get_flags(const char *arg) {
 
 static zip_int32_t
 get_compression_method(const char *arg) {
-    if (strcmp(arg, "default") == 0)
+    if (strcasecmp(arg, "default") == 0)
 	return ZIP_CM_DEFAULT;
-    else if (strcmp(arg, "store") == 0)
+    else if (strcasecmp(arg, "store") == 0)
 	return ZIP_CM_STORE;
-    else if (strcmp(arg, "deflate") == 0)
+    else if (strcasecmp(arg, "deflate") == 0)
 	return ZIP_CM_DEFLATE;
 #if defined(HAVE_LIBBZ2)
-    else if (strcmp(arg, "bzip2") == 0)
+    else if (strcasecmp(arg, "bzip2") == 0)
 	return ZIP_CM_BZIP2;
 #endif
-    else if (strcmp(arg, "unknown") == 0)
+#if defined(HAVE_LIBLZMA)
+/*  Disabled - because 7z isn't able to unpack ZIP+LZMA ZIP+LZMA2
+    archives made this way - and vice versa.
+
+    else if (strcasecmp(arg, "lzma") == 0)
+      return ZIP_CM_LZMA;
+    else if (strcasecmp(arg, "lzma2") == 0)
+      return ZIP_CM_LZMA2;
+*/
+    else if (strcasecmp(arg, "xz") == 0)
+      return ZIP_CM_XZ;
+
+#endif
+    else if (strcasecmp(arg, "unknown") == 0)
 	return 100;
     return 0; /* TODO: error handling */
 }
 
 static zip_uint16_t
 get_encryption_method(const char *arg) {
-    if (strcmp(arg, "none") == 0)
+    if (strcasecmp(arg, "none") == 0)
 	return ZIP_EM_NONE;
-    else if (strcmp(arg, "AES-128") == 0)
+    else if (strcasecmp(arg, "PKWARE") == 0)
+	return ZIP_EM_TRAD_PKWARE;
+    else if (strcasecmp(arg, "AES-128") == 0)
 	return ZIP_EM_AES_128;
-    else if (strcmp(arg, "AES-192") == 0)
+    else if (strcasecmp(arg, "AES-192") == 0)
 	return ZIP_EM_AES_192;
-    else if (strcmp(arg, "AES-256") == 0)
+    else if (strcasecmp(arg, "AES-256") == 0)
 	return ZIP_EM_AES_256;
-    else if (strcmp(arg, "unknown") == 0)
+    else if (strcasecmp(arg, "unknown") == 0)
 	return 100;
     return (zip_uint16_t)-1; /* TODO: error handling */
 }
@@ -702,6 +746,7 @@ dispatch_table_t dispatch_table[] = {{"add", 2, "name content", "add file called
 				     {"set_extra", 5, "index extra_id extra_index flags value", "set extra field", set_extra},
 				     {"set_file_comment", 2, "index comment", "set file comment", set_file_comment},
 				     {"set_file_compression", 3, "index method compression_flags", "set file compression method", set_file_compression},
+				     {"set_file_dostime", 3, "index time date", "set file modification time and date (DOS format)", set_file_dostime},
 				     {"set_file_encryption", 3, "index method password", "set file encryption method", set_file_encryption},
 				     {"set_file_mtime", 2, "index timestamp", "set file modification time", set_file_mtime},
 				     {"set_file_mtime_all", 1, "timestamp", "set file modification time for all files", set_file_mtime_all},
@@ -775,24 +820,34 @@ usage(const char *progname, const char *reason) {
 	fprintf(out, "\t%s %s\n\t    %s\n\n", dispatch_table[i].cmdline_name, dispatch_table[i].arg_names, dispatch_table[i].description);
     }
     fprintf(out, "\nSupported flags are:\n"
-		 "\t0\t(no flags)\n"
-		 "\tC\tZIP_FL_NOCASE\n"
-		 "\tc\tZIP_FL_CENTRAL\n"
-		 "\td\tZIP_FL_NODIR\n"
-		 "\tl\tZIP_FL_LOCAL\n"
-		 "\tu\tZIP_FL_UNCHANGED\n");
+	    "\t0\t(no flags)\n"
+	    "\tC\tZIP_FL_NOCASE\n"
+	    "\tc\tZIP_FL_CENTRAL\n"
+	    "\td\tZIP_FL_NODIR\n"
+	    "\tl\tZIP_FL_LOCAL\n"
+	    "\tu\tZIP_FL_UNCHANGED\n");
     fprintf(out, "\nSupported compression methods are:\n"
-		 "\tdefault\n"
-#if defined(HAVE_LIBBZ2)
-		 "\tbzip2\n"
-#endif
-		 "\tdeflate\n"
-		 "\tstore\n");
-    fprintf(out, "\nSupported compression methods are:\n"
-		 "\tnone\n"
-		 "\tAES-128\n"
-		 "\tAES-192\n"
-		 "\tAES-256\n");
+	    "\tdefault\n");
+    if (zip_compression_method_supported(ZIP_CM_BZIP2, 1)) {
+	fprintf(out, "\tbzip2\n");
+    }
+    fprintf(out, "\tdeflate\n"
+	    "\tstore\n");
+    if (zip_compression_method_supported(ZIP_CM_XZ, 1)) {
+	fprintf(out, "\txz\n");
+    }
+    fprintf(out, "\nSupported encryption methods are:\n"
+	    "\tnone\n");
+    if (zip_encryption_method_supported(ZIP_EM_AES_128, 1)) {
+	fprintf(out, "\tAES-128\n");
+    }
+    if (zip_encryption_method_supported(ZIP_EM_AES_192, 1)) {
+	fprintf(out, "\tAES-192\n");
+    }
+    if (zip_encryption_method_supported(ZIP_EM_AES_256, 1)) {
+	fprintf(out, "\tAES-256\n");
+    }
+    fprintf(out, "\tPKWARE\n");
     fprintf(out, "\nThe index is zero-based.\n");
     exit(0);
 }

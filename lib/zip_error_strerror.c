@@ -1,6 +1,6 @@
 /*
   zip_error_sterror.c -- get string representation of struct zip_error
-  Copyright (C) 1999-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "zipint.h"
 

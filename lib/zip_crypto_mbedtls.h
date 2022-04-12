@@ -1,6 +1,6 @@
 /*
   zip_crypto_mbedtls.h -- definitions for mbedtls wrapper
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -33,6 +33,8 @@
 
 #ifndef HAD_ZIP_CRYPTO_MBEDTLS_H
 #define HAD_ZIP_CRYPTO_MBEDTLS_H
+
+#define HAVE_SECURE_RANDOM
 
 #include <mbedtls/aes.h>
 #include <mbedtls/md.h>

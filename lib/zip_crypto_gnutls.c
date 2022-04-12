@@ -1,6 +1,6 @@
 /*
   zip_crypto_gnutls.c -- GnuTLS wrapper.
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -106,7 +106,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     }
 
     if ((ret = gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length)) < 0) {
-	// TODO: set error
+	/* TODO: set error */
 	free(hmac);
 	return NULL;
     }
@@ -130,6 +130,6 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
 
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return gnutls_rnd(GNUTLS_RND_KEY, buffer, length) == 0;
 }

@@ -1,6 +1,6 @@
 /*
   zipmerge.c -- merge zip archives
-  Copyright (C) 2004-2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2004-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -40,15 +40,10 @@
 
 #include "config.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #ifndef HAVE_GETOPT
 #include "getopt.h"
 #endif
 
-#include "compat.h"
 #include "zip.h"
 
 char *progname;
@@ -71,7 +66,7 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2004-2018 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2004-2019 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
 #define OPTIONS "hVDiIsS"

@@ -1,6 +1,6 @@
 /*
   zip_crypto_mbedtls.c -- mbed TLS wrapper
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -34,6 +34,7 @@
 #include <stdlib.h>
 
 #include "zipint.h"
+
 #include "zip_crypto.h"
 
 #include <mbedtls/ctr_drbg.h>
@@ -136,7 +137,7 @@ typedef struct {
 } zip_random_context_t;
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     static zip_random_context_t *ctx = NULL;
     const unsigned char *pers = "zip_crypto_mbedtls";
 

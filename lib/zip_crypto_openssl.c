@@ -1,6 +1,6 @@
 /*
   zip_crypto_openssl.c -- OpenSSL wrapper.
-  Copyright (C) 2018 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -131,6 +131,6 @@ _zip_crypto_hmac_output(_zip_crypto_hmac_t *hmac, zip_uint8_t *data) {
 
 
 ZIP_EXTERN bool
-zip_random(zip_uint8_t *buffer, zip_uint16_t length) {
+zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     return RAND_bytes(buffer, length) == 1;
 }
