@@ -36,6 +36,8 @@
 static char *ansi_allocate_tempname(const char *name, size_t extra_chars, size_t *lengthp);
 static void ansi_make_tempname(char *buf, size_t len, const char *name, zip_uint32_t i);
 
+/* clang-format off */
+
 zip_win32_file_operations_t ops_ansi = {
     ansi_allocate_tempname,
     CreateFileA,
@@ -48,10 +50,12 @@ zip_win32_file_operations_t ops_ansi = {
     strdup
 };
 
+/* clang-format on */
+
 ZIP_EXTERN zip_source_t *
 zip_source_win32a(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t len) {
     if (za == NULL)
-    return NULL;
+        return NULL;
 
     return zip_source_win32a_create(fname, start, len, &za->error);
 }
@@ -60,8 +64,8 @@ zip_source_win32a(zip_t *za, const char *fname, zip_uint64_t start, zip_int64_t 
 ZIP_EXTERN zip_source_t *
 zip_source_win32a_create(const char *fname, zip_uint64_t start, zip_int64_t length, zip_error_t *error) {
     if (fname == NULL || length < -1) {
-    zip_error_set(error, ZIP_ER_INVAL, 0);
-    return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
     return zip_source_file_common_new(fname, NULL, start, length, NULL, &_zip_source_file_win32_named_ops, &ops_ansi, error);

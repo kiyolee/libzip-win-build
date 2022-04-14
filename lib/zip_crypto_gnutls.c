@@ -1,6 +1,6 @@
 /*
   zip_crypto_gnutls.c -- GnuTLS wrapper.
-  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2021 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -42,26 +42,26 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
     _zip_crypto_aes_t *aes;
 
     if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     aes->key_size = key_size;
 
     switch (aes->key_size) {
     case 128:
-	nettle_aes128_set_encrypt_key(&aes->ctx.ctx_128, key);
-	break;
+        nettle_aes128_set_encrypt_key(&aes->ctx.ctx_128, key);
+        break;
     case 192:
-	nettle_aes192_set_encrypt_key(&aes->ctx.ctx_192, key);
-	break;
+        nettle_aes192_set_encrypt_key(&aes->ctx.ctx_192, key);
+        break;
     case 256:
-	nettle_aes256_set_encrypt_key(&aes->ctx.ctx_256, key);
-	break;
+        nettle_aes256_set_encrypt_key(&aes->ctx.ctx_256, key);
+        break;
     default:
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	free(aes);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        free(aes);
+        return NULL;
     }
 
     return aes;
@@ -71,14 +71,14 @@ bool
 _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip_uint8_t *out) {
     switch (aes->key_size) {
     case 128:
-	nettle_aes128_encrypt(&aes->ctx.ctx_128, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
-	break;
+        nettle_aes128_encrypt(&aes->ctx.ctx_128, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
+        break;
     case 192:
-	nettle_aes192_encrypt(&aes->ctx.ctx_192, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
-	break;
+        nettle_aes192_encrypt(&aes->ctx.ctx_192, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
+        break;
     case 256:
-	nettle_aes256_encrypt(&aes->ctx.ctx_256, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
-	break;
+        nettle_aes256_encrypt(&aes->ctx.ctx_256, ZIP_CRYPTO_AES_BLOCK_LENGTH, out, in);
+        break;
     }
 
     return true;
@@ -87,7 +87,7 @@ _zip_crypto_aes_encrypt_block(_zip_crypto_aes_t *aes, const zip_uint8_t *in, zip
 void
 _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
-	return;
+        return;
     }
 
     _zip_crypto_clear(aes, sizeof(*aes));
@@ -98,17 +98,16 @@ _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
 _zip_crypto_hmac_t *
 _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error) {
     _zip_crypto_hmac_t *hmac;
-    int ret;
 
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
-    if ((ret = gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length)) < 0) {
-	/* TODO: set error */
-	free(hmac);
-	return NULL;
+    if (gnutls_hmac_init(hmac, GNUTLS_MAC_SHA1, secret, secret_length) < 0) {
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        free(hmac);
+        return NULL;
     }
 
     return hmac;
@@ -120,7 +119,7 @@ _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     zip_uint8_t buf[ZIP_CRYPTO_SHA1_LENGTH];
 
     if (hmac == NULL) {
-	return;
+        return;
     }
 
     gnutls_hmac_deinit(*hmac, buf);

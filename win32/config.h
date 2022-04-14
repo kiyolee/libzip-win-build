@@ -33,34 +33,43 @@
 /* #undef HAVE_GNUTLS */
 /* #undef HAVE_LIBBZ2 */
 /* #undef HAVE_LIBLZMA */
+/* #undef HAVE_LIBZSTD */
 /* #undef HAVE_LOCALTIME_R */
 /* #undef HAVE_MBEDTLS */
 /* #undef HAVE_MKSTEMP */
 /* #undef HAVE_NULLABLE */
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
+#if defined(_MSC_VER) && _MSC_VER < 1900
 /* #undef HAVE_SNPRINTF */
+#else
+#define HAVE_SNPRINTF
+#endif
 /* #undef HAVE_STRCASECMP */
 #define HAVE_STRDUP
 #define HAVE_STRICMP
-#if !defined(_MSC_VER) || _MSC_VER >= 1800
-#define HAVE_STRTOLL
-#define HAVE_STRTOULL
-#else
+#if defined(_MSC_VER) && _MSC_VER < 1800
 /* #undef HAVE_STRTOLL */
 /* #undef HAVE_STRTOULL */
+#else
+#define HAVE_STRTOLL
+#define HAVE_STRTOULL
 #endif
 /* #undef HAVE_STRUCT_TM_TM_ZONE */
-#if !defined(_MSC_VER) || _MSC_VER >= 1800
-#define HAVE_STDBOOL_H
-#else
+#if defined(_MSC_VER) && _MSC_VER < 1800
 /* #undef HAVE_STDBOOL_H */
+#else
+#define HAVE_STDBOOL_H
 #endif
 /* #undef HAVE_STRINGS_H */
 /* #undef HAVE_UNISTD_H */
 #define HAVE_WINDOWS_CRYPTO
 #define SIZEOF_OFF_T 4
+#ifdef _WIN64
+#define SIZEOF_SIZE_T 8
+#else
 #define SIZEOF_SIZE_T 4
+#endif
 /* #undef HAVE_DIRENT_H */
 /* #undef HAVE_FTS_H */
 /* #undef HAVE_NDIR_H */
@@ -70,6 +79,6 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.7.3"
+#define VERSION "1.8.0"
 
 #endif /* HAD_CONFIG_H */

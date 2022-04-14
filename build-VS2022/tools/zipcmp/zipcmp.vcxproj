@@ -94,10 +94,12 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\diff_output.c" />
     <ClCompile Include="..\..\..\src\getopt.c" />
     <ClCompile Include="..\..\..\src\zipcmp.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\diff_output.h" />
     <ClInclude Include="..\..\..\src\getopt.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

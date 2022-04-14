@@ -1,6 +1,6 @@
 /*
   zip_crypto_mbedtls.c -- mbed TLS wrapper
-  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2021 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -41,14 +41,15 @@
 #include <mbedtls/entropy.h>
 #include <mbedtls/pkcs5.h>
 
+#include <limits.h>
 
 _zip_crypto_aes_t *
 _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error) {
     _zip_crypto_aes_t *aes;
 
     if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     mbedtls_aes_init(aes);
@@ -60,7 +61,7 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
 void
 _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
-	return;
+        return;
     }
 
     mbedtls_aes_free(aes);
@@ -73,27 +74,27 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     _zip_crypto_hmac_t *hmac;
 
     if (secret_length > INT_MAX) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     mbedtls_md_init(hmac);
 
     if (mbedtls_md_setup(hmac, mbedtls_md_info_from_type(MBEDTLS_MD_SHA1), 1) != 0) {
-	zip_error_set(error, ZIP_ER_INTERNAL, 0);
-	free(hmac);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        free(hmac);
+        return NULL;
     }
 
     if (mbedtls_md_hmac_starts(hmac, (const unsigned char *)secret, (size_t)secret_length) != 0) {
-	zip_error_set(error, ZIP_ER_INTERNAL, 0);
-	free(hmac);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        free(hmac);
+        return NULL;
     }
 
     return hmac;
@@ -103,7 +104,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 void
 _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac == NULL) {
-	return;
+        return;
     }
 
     mbedtls_md_free(hmac);
@@ -119,11 +120,11 @@ _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_ui
     mbedtls_md_init(&sha1_ctx);
 
     if (mbedtls_md_setup(&sha1_ctx, mbedtls_md_info_from_type(MBEDTLS_MD_SHA1), 1) != 0) {
-	ok = false;
+        ok = false;
     }
 
     if (ok && mbedtls_pkcs5_pbkdf2_hmac(&sha1_ctx, (const unsigned char *)key, (size_t)key_length, (const unsigned char *)salt, (size_t)salt_length, (unsigned int)iterations, (uint32_t)output_length, (unsigned char *)output) != 0) {
-	ok = false;
+        ok = false;
     }
 
     mbedtls_md_free(&sha1_ctx);
@@ -142,19 +143,19 @@ zip_secure_random(zip_uint8_t *buffer, zip_uint16_t length) {
     const unsigned char *pers = "zip_crypto_mbedtls";
 
     if (!ctx) {
-	ctx = (zip_random_context_t *)malloc(sizeof(zip_random_context_t));
-	if (!ctx) {
-	    return false;
-	}
-	mbedtls_entropy_init(&ctx->entropy);
-	mbedtls_ctr_drbg_init(&ctx->ctr_drbg);
-	if (mbedtls_ctr_drbg_seed(&ctx->ctr_drbg, mbedtls_entropy_func, &ctx->entropy, pers, strlen(pers)) != 0) {
-	    mbedtls_ctr_drbg_free(&ctx->ctr_drbg);
-	    mbedtls_entropy_free(&ctx->entropy);
-	    free(ctx);
-	    ctx = NULL;
-	    return false;
-	}
+        ctx = (zip_random_context_t *)malloc(sizeof(zip_random_context_t));
+        if (!ctx) {
+            return false;
+        }
+        mbedtls_entropy_init(&ctx->entropy);
+        mbedtls_ctr_drbg_init(&ctx->ctr_drbg);
+        if (mbedtls_ctr_drbg_seed(&ctx->ctr_drbg, mbedtls_entropy_func, &ctx->entropy, pers, strlen(pers)) != 0) {
+            mbedtls_ctr_drbg_free(&ctx->ctr_drbg);
+            mbedtls_entropy_free(&ctx->entropy);
+            free(ctx);
+            ctx = NULL;
+            return false;
+        }
     }
 
     return mbedtls_ctr_drbg_random(&ctx->ctr_drbg, (unsigned char *)buffer, (size_t)length) == 0;

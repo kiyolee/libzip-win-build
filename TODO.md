@@ -1,3 +1,7 @@
+## Before next release
+
+reconsider zip_source_zip (uncompressed data for whole file not easy to get)
+
 ## Prefixes
 
 For example for adding extractors for self-extracting zip archives.
@@ -8,7 +12,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Compression
 
-* add lzma support
+* add lzma2 support
 * add deflate64 support (https://github.com/madler/zlib/blob/master/contrib/infback9/infback9.h)
 
 ## API Issues
@@ -21,6 +25,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Features
 
+* add flag `ZIP_FL_SUPPORT_MULTIPLE_OPENS` and allow zip_fopen (perhaps other functions) on added/replaced files with such sources
 * add seek support for AES-encrypted files
 * consistently use `_zip_crypto_clear()` for passwords
 * support setting extra fields from `zip_source`
@@ -97,6 +102,8 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
 
 ## Test Case Issues
 
+* add test cases for all ZIP_INCONS detail errors
+* `incons-local-filename-short.zzip` doesn't test short filename, since extra fields fail to parse.
 * test error cases with special source
   - tell it which command should fail
   - use it both as source for `zip_add` and `zip_open_from_source`
@@ -120,8 +127,7 @@ const zip_uint8_t *zip_get_archive_prefix(struct zip *za, zip_uint64_t *lengthp)
   * support testing on macOS
 * add test cases for lots of files (including too many)
 * add test cases for holes (between files, between files and cdir, between cdir and eocd, + zip64 where appropriate)
-* unchange on added file
-* test seek in `zip_source_crc()`
+* test seek in `zip_source_crc_create()`
 * test cases for `set_extra*`, `delete_extra*`, `*extra_field*`
 * test cases for in memory archives
   * add

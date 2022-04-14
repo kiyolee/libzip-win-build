@@ -27,9 +27,15 @@
     <ClCompile Include="..\..\..\src\getopt.c">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\diff_output.c">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\getopt.h">
+      <Filter>Header Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\diff_output.h">
       <Filter>Header Files\src</Filter>
     </ClInclude>
   </ItemGroup>

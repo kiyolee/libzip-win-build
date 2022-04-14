@@ -1,6 +1,6 @@
 /*
   zip_crypto_gnutls.h -- definitions for GnuTLS wrapper.
-  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2021 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -45,9 +45,9 @@
 
 typedef struct {
     union {
-	struct aes128_ctx ctx_128;
-	struct aes192_ctx ctx_192;
-	struct aes256_ctx ctx_256;
+        struct aes128_ctx ctx_128;
+        struct aes192_ctx ctx_192;
+        struct aes256_ctx ctx_256;
     } ctx;
     zip_uint16_t key_size;
 } _zip_crypto_aes_t;

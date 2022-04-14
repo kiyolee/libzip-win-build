@@ -1,6 +1,6 @@
 /*
   zip_crypto_openssl.c -- OpenSSL wrapper.
-  Copyright (C) 2018-2019 Dieter Baron and Thomas Klausner
+  Copyright (C) 2018-2021 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -37,9 +37,10 @@
 
 #include "zip_crypto.h"
 
+#include <limits.h>
 #include <openssl/rand.h>
 
-#if OPENSSL_VERSION_NUMBER < 0x1010000fL || defined(LIBRESSL_VERSION_NUMBER)
+#if OPENSSL_VERSION_NUMBER < 0x1010000fL || (defined(LIBRESSL_VERSION_NUMBER) && LIBRESSL_VERSION_NUMBER < 0x02070000fL)
 #define USE_OPENSSL_1_0_API
 #endif
 
@@ -49,8 +50,8 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
     _zip_crypto_aes_t *aes;
 
     if ((aes = (_zip_crypto_aes_t *)malloc(sizeof(*aes))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     AES_set_encrypt_key(key, key_size, aes);
@@ -61,7 +62,7 @@ _zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *
 void
 _zip_crypto_aes_free(_zip_crypto_aes_t *aes) {
     if (aes == NULL) {
-	return;
+        return;
     }
 
     _zip_crypto_clear(aes, sizeof(*aes));
@@ -74,32 +75,32 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
     _zip_crypto_hmac_t *hmac;
 
     if (secret_length > INT_MAX) {
-	zip_error_set(error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
 #ifdef USE_OPENSSL_1_0_API
     if ((hmac = (_zip_crypto_hmac_t *)malloc(sizeof(*hmac))) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
     HMAC_CTX_init(hmac);
 #else
     if ((hmac = HMAC_CTX_new()) == NULL) {
-	zip_error_set(error, ZIP_ER_MEMORY, 0);
-	return NULL;
+        zip_error_set(error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 #endif
 
     if (HMAC_Init_ex(hmac, secret, (int)secret_length, EVP_sha1(), NULL) != 1) {
-	zip_error_set(error, ZIP_ER_INTERNAL, 0);
+        zip_error_set(error, ZIP_ER_INTERNAL, 0);
 #ifdef USE_OPENSSL_1_0_API
-	free(hmac);
+        free(hmac);
 #else
-	HMAC_CTX_free(hmac);
+        HMAC_CTX_free(hmac);
 #endif
-	return NULL;
+        return NULL;
     }
 
     return hmac;
@@ -109,7 +110,7 @@ _zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_
 void
 _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac) {
     if (hmac == NULL) {
-	return;
+        return;
     }
 
 #ifdef USE_OPENSSL_1_0_API
