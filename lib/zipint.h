@@ -3,7 +3,7 @@
 
 /*
   zipint.h -- internal declarations.
-  Copyright (C) 1999-2021 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -122,7 +122,7 @@ enum zip_compression_status {
 typedef enum zip_compression_status zip_compression_status_t;
 
 struct zip_compression_algorithm {
-    /* Return maxiumum compressed size for uncompressed data of given size. */
+    /* Return maximum compressed size for uncompressed data of given size. */
     zip_uint64_t (*maximum_compressed_size)(zip_uint64_t uncompressed_size);
 
     /* called once to create new context */
@@ -576,7 +576,7 @@ zip_hash_t *_zip_hash_new(zip_error_t *error);
 bool _zip_hash_reserve_capacity(zip_hash_t *hash, zip_uint64_t capacity, zip_error_t *error);
 bool _zip_hash_revert(zip_hash_t *hash, zip_error_t *error);
 
-int _zip_mkstempm(char *path, int mode);
+int _zip_mkstempm(char *path, int mode, bool create_file);
 
 zip_t *_zip_open(zip_source_t *, unsigned int, zip_error_t *);
 
@@ -611,12 +611,12 @@ zip_source_t *_zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_
 zip_source_t *_zip_source_zip_new(zip_t *, zip_uint64_t, zip_flags_t, zip_uint64_t, zip_uint64_t, const char *, zip_error_t *error);
 
 int _zip_stat_merge(zip_stat_t *dst, const zip_stat_t *src, zip_error_t *error);
-int _zip_string_equal(const zip_string_t *, const zip_string_t *);
-void _zip_string_free(zip_string_t *);
-zip_uint32_t _zip_string_crc32(const zip_string_t *);
-const zip_uint8_t *_zip_string_get(zip_string_t *, zip_uint32_t *, zip_flags_t, zip_error_t *);
-zip_uint16_t _zip_string_length(const zip_string_t *);
-zip_string_t *_zip_string_new(const zip_uint8_t *, zip_uint16_t, zip_flags_t, zip_error_t *);
+int _zip_string_equal(const zip_string_t *a, const zip_string_t *b);
+void _zip_string_free(zip_string_t *string);
+zip_uint32_t _zip_string_crc32(const zip_string_t *string);
+const zip_uint8_t *_zip_string_get(zip_string_t *string, zip_uint32_t *lenp, zip_flags_t flags, zip_error_t *error);
+zip_uint16_t _zip_string_length(const zip_string_t *string);
+zip_string_t *_zip_string_new(const zip_uint8_t *raw, zip_uint16_t length, zip_flags_t flags, zip_error_t *error);
 int _zip_string_write(zip_t *za, const zip_string_t *string);
 bool _zip_winzip_aes_decrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);
 bool _zip_winzip_aes_encrypt(zip_winzip_aes_t *ctx, zip_uint8_t *data, zip_uint64_t length);

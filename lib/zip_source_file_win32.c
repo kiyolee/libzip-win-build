@@ -1,6 +1,6 @@
 /*
   zip_source_file_win32.c -- read-only Windows file source implementation
-  Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -115,7 +115,7 @@ _zip_win32_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, 
         break;
     default:
         zip_error_set(&ctx->error, ZIP_ER_SEEK, EINVAL);
-        return -1;
+        return false;
     }
 
     li.QuadPart = (LONGLONG)offset;
@@ -184,7 +184,7 @@ _zip_stat_win32(zip_source_file_context_t *ctx, zip_source_file_stat_t *st, HAND
         zip_error_set(&ctx->error, ZIP_ER_READ, _zip_win32_error_to_errno(GetLastError()));
         return false;
     }
-    if (_zip_filetime_to_time_t(mtimeft, &mtime) < 0) {
+    if (!_zip_filetime_to_time_t(mtimeft, &mtime)) {
         zip_error_set(&ctx->error, ZIP_ER_READ, ERANGE);
         return false;
     }

@@ -1,6 +1,6 @@
 /*
  zip_file_set_mtime.c -- set modification time of entry.
- Copyright (C) 2014-2020 Dieter Baron and Thomas Klausner
+ Copyright (C) 2014-2022 Dieter Baron and Thomas Klausner
 
  This file is part of libzip, a library to manipulate ZIP archives.
  The authors can be contacted at <libzip@nih.at>
@@ -53,6 +53,11 @@ zip_file_set_mtime(zip_t *za, zip_uint64_t idx, time_t mtime, zip_flags_t flags)
     }
 
     e = za->entry + idx;
+
+    if (e->orig != NULL && e->orig->encryption_method == ZIP_EM_TRAD_PKWARE && !ZIP_ENTRY_CHANGED(e, ZIP_DIRENT_ENCRYPTION_METHOD) && !ZIP_ENTRY_DATA_CHANGED(e)) {
+        zip_error_set(&za->error, ZIP_ER_OPNOTSUPP, 0);
+        return -1;
+    }
 
     if (e->changes == NULL) {
         if ((e->changes = _zip_dirent_clone(e->orig)) == NULL) {

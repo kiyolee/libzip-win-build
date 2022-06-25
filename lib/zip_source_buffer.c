@@ -1,6 +1,6 @@
 /*
   zip_source_buffer.c -- create zip data source from buffer
-  Copyright (C) 1999-2021 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -361,13 +361,13 @@ buffer_clone(buffer_t *buffer, zip_uint64_t offset, zip_error_t *error) {
     clone->fragment_offsets[clone->nfragments] = offset;
     clone->size = offset;
 
-    clone->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, clone->nfragments - 1);
+    clone->first_owned_fragment = ZIP_MIN(buffer->first_owned_fragment, clone->nfragments);
 
     buffer->shared_buffer = clone;
     clone->shared_buffer = buffer;
     buffer->shared_fragments = clone->nfragments;
     clone->shared_fragments = fragment + 1;
-
+    
     return clone;
 }
 

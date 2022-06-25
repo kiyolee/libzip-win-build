@@ -1,6 +1,6 @@
 /*
   zipcmp.c -- compare zip files
-  Copyright (C) 2003-2021 Dieter Baron and Thomas Klausner
+  Copyright (C) 2003-2022 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -153,7 +153,7 @@ const enum_map_t extra_fields[] = {
     { 0x4453, "Windows NT security descriptor" },
     { 0x4704, "VM/CMS" },
     { 0x470f, "MVS" },
-    { 0x4854, "Theos, old inofficial port" },
+    { 0x4854, "Theos, old unofficial port" },
     { 0x4b46, "FWKCS MD5" },
     { 0x4c41, "OS/2 access control list (text ACL)" },
     { 0x4d49, "Info-ZIP OpenVMS (obsolete)" },
@@ -194,6 +194,7 @@ char help[] = "\n\
   -i       compare names ignoring case distinctions\n\
   -p       compare as many details as possible\n\
   -q       be quiet\n\
+  -s       print a summary\n\
   -t       test zip files (compare file contents to checksum)\n\
   -V       display version number\n\
   -v       be verbose (print differences, default)\n\
@@ -201,10 +202,10 @@ char help[] = "\n\
 Report bugs to <libzip@nih.at>.\n";
 
 char version_string[] = PROGRAM " (" PACKAGE " " VERSION ")\n\
-Copyright (C) 2003-2021 Dieter Baron and Thomas Klausner\n\
+Copyright (C) 2003-2022 Dieter Baron and Thomas Klausner\n\
 " PACKAGE " comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n";
 
-#define OPTIONS "hVCipqtv"
+#define OPTIONS "hVCipqstv"
 
 
 #define BOTH_ARE_ZIPS(a) (a[0].za && a[1].za)
@@ -230,7 +231,8 @@ static int list_directory(const char *name, struct archive *a);
 static int list_zip(const char *name, struct archive *a);
 static int test_file(zip_t *za, zip_uint64_t idx, const char *zipname, const char *filename, zip_uint64_t size, zip_uint32_t crc);
 
-int ignore_case, test_files, paranoid, verbose, have_directory, check_consistency;
+int ignore_case, test_files, paranoid, verbose, have_directory, check_consistency, summary;
+int plus_count = 0, minus_count = 0;
 
 diff_output_t output;
 
@@ -247,6 +249,7 @@ main(int argc, char *const argv[]) {
     paranoid = 0;
     have_directory = 0;
     verbose = 1;
+    summary = 0;
 
     while ((c = getopt(argc, argv, OPTIONS)) != -1) {
         switch (c) {
@@ -262,6 +265,9 @@ main(int argc, char *const argv[]) {
             case 'q':
                 verbose = 0;
                 break;
+	    case 's':
+		summary = 1;
+		break;
             case 't':
                 test_files = 1;
                 break;
@@ -340,9 +346,11 @@ compare_zip(char *const zn[]) {
         if (comment_compare(a[0].comment, a[0].comment_length, a[1].comment, a[1].comment_length) != 0) {
             if (a[0].comment_length > 0) {
                 diff_output_data(&output, '-', (const zip_uint8_t *)a[0].comment, a[0].comment_length, "archive comment");
+		minus_count++;
             }
             if (a[1].comment_length > 0) {
                 diff_output_data(&output, '+', (const zip_uint8_t *)a[1].comment, a[1].comment_length, "archive comment");
+		plus_count++;
             }
             res = 1;
         }
@@ -358,6 +366,10 @@ compare_zip(char *const zn[]) {
             free(a[i].entry[j].name);
         }
         free(a[i].entry);
+    }
+
+    if (summary) {
+	printf("%d files removed, %d files added\n", minus_count, plus_count);
     }
 
     switch (res) {
@@ -596,6 +608,7 @@ static int compare_list(char *const name[2], const void *list[2], const zip_uint
             break;                                        \
         }                                                 \
         print((k) ? '+' : '-', list[k]);                  \
+        (k) ? plus_count++ : minus_count++;		  \
         diff = 1;                                         \
     } while (0)
 
