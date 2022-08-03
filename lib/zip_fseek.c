@@ -3,7 +3,7 @@
   Copyright (C) 2016-2021 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
-  The authors can be contacted at <libzip@nih.at>
+  The authors can be contacted at <info@libzip.org>
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
@@ -57,5 +57,5 @@ zip_file_is_seekable(zip_file_t *zfile) {
         return -1;
     }
     
-    return (zip_source_supports(zfile->src) & ZIP_SOURCE_SEEK) != 0;
+    return ZIP_SOURCE_CHECK_SUPPORTED(zip_source_supports(zfile->src), ZIP_SOURCE_SEEK);
 }

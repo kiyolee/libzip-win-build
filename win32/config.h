@@ -27,6 +27,7 @@
 #define HAVE_CRYPTO
 /* #undef HAVE_FICLONERANGE */
 #define HAVE_FILENO
+/* #undef HAVE_FCHMOD */
 /* #undef HAVE_FSEEKO */
 /* #undef HAVE_FTELLO */
 /* #undef HAVE_GETPROGNAME */
@@ -79,6 +80,6 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.9.0"
+#define VERSION "1.9.1"
 
 #endif /* HAD_CONFIG_H */
