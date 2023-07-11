@@ -384,6 +384,9 @@
     <ClCompile Include="..\..\win32\zip_err_str.c">
       <Filter>Source Files\win32</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_pass_to_lower_layer.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\compat.h">

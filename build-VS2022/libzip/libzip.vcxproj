@@ -184,6 +184,7 @@
     <ClCompile Include="..\..\lib\zip_source_is_deleted.c" />
     <ClCompile Include="..\..\lib\zip_source_layered.c" />
     <ClCompile Include="..\..\lib\zip_source_open.c" />
+    <ClCompile Include="..\..\lib\zip_source_pass_to_lower_layer.c" />
     <ClCompile Include="..\..\lib\zip_source_pkware_decode.c" />
     <ClCompile Include="..\..\lib\zip_source_pkware_encode.c" />
     <ClCompile Include="..\..\lib\zip_source_read.c" />
