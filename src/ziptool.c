@@ -85,16 +85,12 @@ zip_flags_t stat_flags;
 int hex_encoded_filenames = 0; // Can only be set in ziptool_regress.
 
 static int
-cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
+cat_impl_backend(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len, FILE *out) {
     zip_error_t error;
     zip_source_t *src;
     zip_int64_t n;
     char buf[8192];
 
-#ifdef _WIN32
-    /* Need to set stdout to binary mode for Windows */
-    _setmode(_fileno(stdout), _O_BINARY);
-#endif
     zip_error_init(&error);
     /* we can't pass 0 as a len to zip_source_zip_create because it
        will try to give us compressed data */
@@ -125,8 +121,8 @@ cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
         return -1;
     }
     while ((n = zip_source_read(src, buf, sizeof(buf))) > 0) {
-        if (fwrite(buf, (size_t)n, 1, stdout) != 1) {
-            fprintf(stderr, "can't write file contents to stdout: %s\n", strerror(errno));
+        if (fwrite(buf, (size_t)n, 1, out) != 1) {
+            fprintf(stderr, "can't write file contents: %s\n", strerror(errno));
             zip_source_free(src);
             return -1;
         }
@@ -144,6 +140,15 @@ cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
     zip_source_free(src);
 
     return 0;
+}
+
+static int
+cat_impl(zip_uint64_t idx, zip_uint64_t start, zip_uint64_t len) {
+#ifdef _WIN32
+    /* Need to set stdout to binary mode for Windows */
+    _setmode(_fileno(stdout), _O_BINARY);
+#endif
+    return cat_impl_backend(idx, start, len, stdout);
 }
 
 static int
@@ -1056,6 +1061,10 @@ main(int argc, char *argv[]) {
     }
     zip_error_fini(&error);
 
+#ifdef REGRESS_PREPARE_ARGS
+    REGRESS_PREPARE_ARGS
+#endif
+
     err = 0;
     while (arg < argc) {
         int ret;
@@ -1097,22 +1106,33 @@ main(int argc, char *argv[]) {
 static char filename_buffer[FILENAME_BUFFER_LENGTH + 1];
 
 static const char* encode_filename(const char* name) {
-    const unsigned char* s;
-    char* t;
-    if (!hex_encoded_filenames) {
-        return name;
-    }
+    char *t = filename_buffer;
 
-    if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
-        // TODO: error message
-        exit(1);
+    if (!hex_encoded_filenames) {
+        const char* s = name;
+        if (strlen(name) > FILENAME_BUFFER_LENGTH) {
+            // TODO: error message
+            exit(1);
+        }
+        while (*s != '\0') {
+            if (s[0] == '\r' && s[1] == '\n') {
+                s++;
+                continue;
+            }
+            *(t++) = *(s++);
+        }
     }
-    s = (const unsigned char*)name;
-    t = filename_buffer;
-    while (*s != '\0') {
-        *(t++) = BIN2HEX(*s >> 4);
-        *(t++) = BIN2HEX(*s & 0xf);
-        s += 1;
+    else {
+        const unsigned char *s = (const unsigned char *)name;
+        if (strlen(name) > FILENAME_BUFFER_LENGTH / 2) {
+            // TODO: error message
+            exit(1);
+        }
+        while (*s != '\0') {
+            *(t++) = BIN2HEX(*s >> 4);
+            *(t++) = BIN2HEX(*s & 0xf);
+            s += 1;
+        }
     }
     *t = '\0';
     return filename_buffer;

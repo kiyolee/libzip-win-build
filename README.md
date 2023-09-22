@@ -2,7 +2,7 @@
 
 libzip Windows build with Visual Studio.
 
-This version is libzip-1.10.0.
+This version is libzip-1.10.1.
 
 To build, simply open the required solution file, and
 you know how to use Visual Studio, right?
