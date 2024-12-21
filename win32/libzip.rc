@@ -1,9 +1,9 @@
 #include <winver.h>
 
-#define LIBZIP_VERSION_STR  "1.11.1"
+#define LIBZIP_VERSION_STR  "1.11.2"
 #define LIBZIP_VER_MAJOR    1
 #define LIBZIP_VER_MINOR    11
-#define LIBZIP_VER_REVISION 1
+#define LIBZIP_VER_REVISION 2
 
 #ifdef GCC_WINDRES
 VS_VERSION_INFO		VERSIONINFO
