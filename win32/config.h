@@ -88,6 +88,6 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.10.1"
+#define VERSION "1.11.1"
 
 #endif /* HAD_CONFIG_H */
