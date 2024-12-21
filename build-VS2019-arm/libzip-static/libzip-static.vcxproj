@@ -220,6 +220,8 @@
     <ClInclude Include="..\..\lib\compat.h" />
     <ClInclude Include="..\..\lib\zip.h" />
     <ClInclude Include="..\..\lib\zipint.h" />
+    <ClInclude Include="..\..\lib\zip_crypto.h" />
+    <ClInclude Include="..\..\lib\zip_crypto_win.h" />
     <ClInclude Include="..\..\lib\zip_source_file.h" />
     <ClInclude Include="..\..\lib\zip_source_file_stdio.h" />
     <ClInclude Include="..\..\lib\zip_source_file_win32.h" />

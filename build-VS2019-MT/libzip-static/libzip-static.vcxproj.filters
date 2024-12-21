@@ -416,5 +416,11 @@
     <ClInclude Include="..\..\lib\zip_source_file.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\lib\zip_crypto.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zip_crypto_win.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
