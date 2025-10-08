@@ -390,6 +390,9 @@
     <ClCompile Include="..\..\lib\zip_source_get_dostime.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\lib\zip_realloc.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\compat.h">

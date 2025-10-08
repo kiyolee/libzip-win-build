@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\lib\zip_pkware.c" />
     <ClCompile Include="..\..\lib\zip_progress.c" />
     <ClCompile Include="..\..\lib\zip_random_win32.c" />
+    <ClCompile Include="..\..\lib\zip_realloc.c" />
     <ClCompile Include="..\..\lib\zip_rename.c" />
     <ClCompile Include="..\..\lib\zip_replace.c" />
     <ClCompile Include="..\..\lib\zip_set_archive_comment.c" />

@@ -92,6 +92,6 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.11.3"
+#define VERSION "1.11.4"
 
 #endif /* HAD_CONFIG_H */

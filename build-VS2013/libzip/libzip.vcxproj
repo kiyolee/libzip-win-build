@@ -149,6 +149,7 @@
     <ClCompile Include="..\..\lib\zip_memdup.c" />
     <ClCompile Include="..\..\lib\zip_name_locate.c" />
     <ClCompile Include="..\..\lib\zip_new.c" />
+    <ClCompile Include="..\..\lib\zip_realloc.c" />
     <ClCompile Include="..\..\lib\zip_open.c" />
     <ClCompile Include="..\..\lib\zip_pkware.c" />
     <ClCompile Include="..\..\lib\zip_progress.c" />
