@@ -37,6 +37,7 @@
 /* #undef HAVE_FSEEKO */
 /* #undef HAVE_FTELLO */
 /* #undef HAVE_GETPROGNAME */
+#define HAVE_GETSECURITYINFO
 /* #undef HAVE_GNUTLS */
 /* #undef HAVE_LIBBZ2 */
 /* #undef HAVE_LIBLZMA */
@@ -46,7 +47,6 @@
 #define HAVE_MEMCPY_S
 /* #undef HAVE_MBEDTLS */
 /* #undef HAVE_MKSTEMP */
-/* #undef HAVE_NULLABLE */
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
 #if defined(_MSC_VER) && _MSC_VER < 1900
@@ -92,6 +92,6 @@
 #define HAVE_SHARED
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.11.2"
+#define VERSION "1.11.3"
 
 #endif /* HAD_CONFIG_H */
