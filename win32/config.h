@@ -31,6 +31,8 @@
 /* #undef HAVE_CLONEFILE */
 /* #undef HAVE_COMMONCRYPTO */
 #define HAVE_CRYPTO
+/* #undef HAVE_EXPLICIT_BZERO */
+/* #undef HAVE_EXPLICIT_MEMSET */
 /* #undef HAVE_FICLONERANGE */
 #define HAVE_FILENO
 /* #undef HAVE_FCHMOD */
@@ -45,7 +47,6 @@
 /* #undef HAVE_LOCALTIME_R */
 #define HAVE_LOCALTIME_S
 #define HAVE_MEMCPY_S
-/* #undef HAVE_MBEDTLS */
 /* #undef HAVE_MKSTEMP */
 /* #undef HAVE_OPENSSL */
 #define HAVE_SETMODE
@@ -90,8 +91,9 @@
 /* #undef HAVE_SYS_NDIR_H */
 /* #undef WORDS_BIGENDIAN */
 #define HAVE_SHARED
+/* #undef LZMA_WINDOW_LIMIT */
 /* END DEFINES */
 #define PACKAGE "libzip"
-#define VERSION "1.11.4"
+#define VERSION "1.12"
 
 #endif /* HAD_CONFIG_H */

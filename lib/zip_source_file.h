@@ -62,11 +62,14 @@ struct zip_source_file_context {
     /* writing */
     char *tmpname;
     void *fout;
+    bool temp_output_created;
 
     zip_source_file_operations_t *ops;
     void *ops_userdata;
 };
 
+zip_source_file_context_t *zip_source_file_context_new(zip_source_file_operations_t *ops, void *ops_userdata);
+void zip_source_file_context_free(zip_source_file_context_t *ctx);
 
 /* The following methods must be implemented to support each feature:
    - close, read, seek, and stat must always be implemented.

@@ -3,7 +3,7 @@
 
 /*
   compat.h -- compatibility defines.
-  Copyright (C) 1999-2022 Dieter Baron and Thomas Klausner
+  Copyright (C) 1999-2025 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -34,15 +34,15 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "zipconf.h"
-
-#include "config.h"
-
 /* to have *_MAX definitions for all types when compiling with g++ */
 #define __STDC_LIMIT_MACROS
 
 /* to have ISO C secure library functions */
 #define __STDC_WANT_LIB_EXT1__ 1
+
+#include "config.h"
+
+#include <sys/stat.h>
 
 #if defined(_WIN32) && defined(ZIP_DLL) && !defined(ZIP_STATIC)
 #ifdef BUILDING_LIBZIP
@@ -80,6 +80,8 @@ typedef char bool;
 #ifndef EOVERFLOW
 #define EOVERFLOW EFBIG
 #endif
+
+#include <fcntl.h>
 
 /* not supported on at least Windows */
 #ifndef O_CLOEXEC
@@ -140,7 +142,6 @@ typedef struct _stat64 zip_os_stat_t;
 #else
 
 /* Normal API */
-#include <sys/stat.h>
 typedef struct stat zip_os_stat_t;
 #define zip_os_fstat fstat
 #define zip_os_stat stat
@@ -226,10 +227,10 @@ typedef long zip_off_t;
 
 #ifndef HAVE_STRERROR_S
 #define strerrorlen_s(errnum) (strlen(strerror(errnum)))
-#define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz)-1] = '\0', strerrorlen_s(errnum) >= (bufsz))
+#define strerror_s(buf, bufsz, errnum) ((void)strncpy_s((buf), (bufsz), strerror(errnum), (bufsz)), (buf)[(bufsz) - 1] = '\0', strerrorlen_s(errnum) >= (bufsz))
 #else
 #ifndef HAVE_STRERRORLEN_S
-#define strerrorlen_s(errnum)   8192
+#define strerrorlen_s(errnum) 8192
 #endif
 #endif
 
@@ -263,11 +264,11 @@ typedef long zip_off_t;
 #endif
 
 #ifndef S_ISDIR
-#define S_ISDIR(mode) (((mode)&S_IFMT) == S_IFDIR)
+#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
 #endif
 
 #ifndef S_ISREG
-#define S_ISREG(mode) (((mode)&S_IFMT) == S_IFREG)
+#define S_ISREG(mode) (((mode) & S_IFMT) == S_IFREG)
 #endif
 
 #endif /* compat.h */

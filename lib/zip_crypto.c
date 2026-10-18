@@ -1,6 +1,6 @@
 /*
-  zip_crypto_mbedtls.h -- definitions for mbedtls wrapper
-  Copyright (C) 2018-2022 Dieter Baron and Thomas Klausner
+  zip_crypto.c -- Common and fallback functions for crypto.
+  Copyright (C) 2026 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <info@libzip.org>
@@ -31,26 +31,18 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef HAD_ZIP_CRYPTO_MBEDTLS_H
-#define HAD_ZIP_CRYPTO_MBEDTLS_H
+#include "zipint.h"
 
-#define HAVE_SECURE_RANDOM
+#include <string.h>
 
-#include <mbedtls/aes.h>
-#include <mbedtls/md.h>
+#ifdef USE_OWN_CRYPTO_CLEAR
+void _zip_crypto_clear(void *b, size_t l) {
+    volatile unsigned char *p = (volatile unsigned char *)b;
 
-#define _zip_crypto_aes_t mbedtls_aes_context
-#define _zip_crypto_hmac_t mbedtls_md_context_t
-
-_zip_crypto_aes_t *_zip_crypto_aes_new(const zip_uint8_t *key, zip_uint16_t key_size, zip_error_t *error);
-#define _zip_crypto_aes_encrypt_block(aes, in, out) (mbedtls_aes_crypt_ecb((aes), MBEDTLS_AES_ENCRYPT, (in), (out)) == 0)
-void _zip_crypto_aes_free(_zip_crypto_aes_t *aes);
-
-_zip_crypto_hmac_t *_zip_crypto_hmac_new(const zip_uint8_t *secret, zip_uint64_t secret_length, zip_error_t *error);
-#define _zip_crypto_hmac(hmac, data, length) (mbedtls_md_hmac_update((hmac), (data), (length)) == 0)
-#define _zip_crypto_hmac_output(hmac, data) (mbedtls_md_hmac_finish((hmac), (data)) == 0)
-void _zip_crypto_hmac_free(_zip_crypto_hmac_t *hmac);
-
-bool _zip_crypto_pbkdf2(const zip_uint8_t *key, zip_uint64_t key_length, const zip_uint8_t *salt, zip_uint16_t salt_length, int iterations, zip_uint8_t *output, zip_uint64_t output_length);
-
-#endif /*  HAD_ZIP_CRYPTO_MBEDTLS_H */
+    /* Ordinary memset stores may be removed when the buffer is no longer used, even if the argument is volatile. */
+    while (l > 0) {
+        l -= 1;
+        p[l] = 0;
+    }
+}
+#endif

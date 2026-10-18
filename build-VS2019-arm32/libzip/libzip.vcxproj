@@ -54,12 +54,14 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\siphash.c" />
     <ClCompile Include="..\..\lib\zip_add.c" />
     <ClCompile Include="..\..\lib\zip_add_dir.c" />
     <ClCompile Include="..\..\lib\zip_add_entry.c" />
     <ClCompile Include="..\..\lib\zip_algorithm_deflate.c" />
     <ClCompile Include="..\..\lib\zip_buffer.c" />
     <ClCompile Include="..\..\lib\zip_close.c" />
+    <ClCompile Include="..\..\lib\zip_crypto.c" />
     <ClCompile Include="..\..\lib\zip_crypto_win.c" />
     <ClCompile Include="..\..\lib\zip_delete.c" />
     <ClCompile Include="..\..\lib\zip_dir_add.c" />
@@ -122,6 +124,7 @@
     <ClCompile Include="..\..\lib\zip_set_file_compression.c" />
     <ClCompile Include="..\..\lib\zip_set_name.c" />
     <ClCompile Include="..\..\lib\zip_source_accept_empty.c" />
+    <ClCompile Include="..\..\lib\zip_source_at_eof.c" />
     <ClCompile Include="..\..\lib\zip_source_begin_write.c" />
     <ClCompile Include="..\..\lib\zip_source_begin_write_cloning.c" />
     <ClCompile Include="..\..\lib\zip_source_buffer.c" />

@@ -27,6 +27,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\lib\siphash.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\lib\zip_add.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
@@ -43,6 +46,12 @@
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_close.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_crypto.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_crypto_win.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_delete.c">
@@ -192,7 +201,16 @@
     <ClCompile Include="..\..\lib\zip_open.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\lib\zip_pkware.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\lib\zip_progress.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_random_win32.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_realloc.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_rename.c">
@@ -217,6 +235,12 @@
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_set_name.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_accept_empty.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_at_eof.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_begin_write.c">
@@ -246,10 +270,37 @@
     <ClCompile Include="..\..\lib\zip_source_error.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_common.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_stdio.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_win32.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_win32_ansi.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_win32_named.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_win32_utf16.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_file_win32_utf8.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_free.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_function.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_get_dostime.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_get_file_attributes.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_is_deleted.c">
@@ -259,6 +310,15 @@
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_open.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_pass_to_lower_layer.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_pkware_decode.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_pkware_encode.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_read.c">
@@ -289,6 +349,12 @@
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_window.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_winzip_aes_decode.c">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\zip_source_winzip_aes_encode.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\zip_source_write.c">
@@ -330,68 +396,11 @@
     <ClCompile Include="..\..\lib\zip_utf-8.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\zip_crypto_win.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_winzip_aes_decode.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_winzip_aes_encode.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\zip_winzip_aes.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_win32_ansi.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_win32_named.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_win32_utf8.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_win32_utf16.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_get_file_attributes.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_pkware_decode.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_pkware_encode.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_pkware.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_random_win32.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_accept_empty.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_common.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_stdio.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_file_win32.c">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="..\..\win32\zip_err_str.c">
       <Filter>Source Files\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_pass_to_lower_layer.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_source_get_dostime.c">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\zip_realloc.c">
-      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,11 +413,14 @@
     <ClInclude Include="..\..\lib\zipint.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\win32\config.h">
-      <Filter>Header Files\win32</Filter>
+    <ClInclude Include="..\..\lib\zip_crypto.h">
+      <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\win32\zipconf.h">
-      <Filter>Header Files\win32</Filter>
+    <ClInclude Include="..\..\lib\zip_crypto_win.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\zip_source_file.h">
+      <Filter>Header Files\lib</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\zip_source_file_stdio.h">
       <Filter>Header Files\lib</Filter>
@@ -416,14 +428,11 @@
     <ClInclude Include="..\..\lib\zip_source_file_win32.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\zip_source_file.h">
-      <Filter>Header Files\lib</Filter>
+    <ClInclude Include="..\..\win32\config.h">
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\lib\zip_crypto.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\zip_crypto_win.h">
-      <Filter>Header Files\lib</Filter>
+    <ClInclude Include="..\..\win32\zipconf.h">
+      <Filter>Header Files\win32</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
