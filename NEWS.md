@@ -1,3 +1,10 @@
+# 1.12.1 [2026-10-14]
+
+* Protect against denial of service attack (advisory GHSA-m3wq-j48p-jxwh, actually fixed in 1.12).
+* Fix compile issues.
+* Fix adding and replacing files in torrentzip archives.
+* Fix error handling in `zip_source_filep_create()`.
+
 # 1.12 [2026-10-07]
 
 * Keep order of local extra fields, even if an identical extra field is present in the central directory.
